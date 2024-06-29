@@ -1,40 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
- */
-
 package com.mycompany.jdbcex01;
 
 import com.demo.pojo.Category;
-import java.sql.Connection;
-import java.sql.ResultSet;
+import com.demo.pojo.Choice;
+import com.demo.pojo.Question;
+import com.demo.services.CategoryServices;
+import com.demo.services.QuestionServices;
+
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author admin
- */
 public class JDBCEx01 {
+    public static void main(String[] args) {
+        try {
+            // List all categories
+            List<Category> categories = CategoryServices.getCategories();
+            System.out.println("Categories:");
+            for (Category category : categories) {
+                System.out.println(category.getId() + ": " + category.getName());
+            }
 
-   public static void main(String[] args) throws SQLException {
-        Connection conn = (Connection) DJBCUtils.getConn();
-        
-        Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("Select * From category");
-        
-        List<Category> cates = new ArrayList<>();
-        while (rs.next()){
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-            
-            Category c = new Category(id, name);
-            cates.add(c);
+            // List all questions
+            List<Question> questions = QuestionServices.getQuestions(null);
+            System.out.println("\nQuestions:");
+            for (Question question : questions) {
+                System.out.println(question.getId() + ": " + question.getContent());
+            }
+
+            // Get a specific question by ID
+            String questionId = "1"; // Replace with a valid question ID
+            Question question = QuestionServices.getQuestionById(questionId);
+            if (question != null) {
+                System.out.println("\nQuestion Details:");
+                System.out.println("ID: " + question.getId());
+                System.out.println("Content: " + question.getContent());
+                System.out.println("Category: " + question.getCategory().getName());
+
+                // Get choices for the specific question
+                List<Choice> choices = QuestionServices.getChoicesByQuestionId(questionId);
+                System.out.println("Choices:");
+                for (Choice choice : choices) {
+                    System.out.println(choice.getId() + ": " + choice.getContent() + " (Correct: " + choice.isCorrect() + ")");
+                }
+            } else {
+                System.out.println("Question with ID " + questionId + " not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        cates.forEach(c -> System.out.println(c.getName()));
-        conn.close();
     }
-
 }

@@ -1,1 +1,7 @@
+com\demo\services\QuestionServices.class
+com\demo\pojo\Category.class
+com\demo\pojo\Question.class
 com\mycompany\jdbcex01\JDBCEx01.class
+com\demo\services\CategoryServices.class
+com\demo\pojo\Choice.class
+com\mycompany\jdbcex01\JDBCUtils.class
